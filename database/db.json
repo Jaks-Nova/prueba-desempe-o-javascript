@@ -1,0 +1,27 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Jason",
+      "email": "jason@admin.com",
+      "password": "admin123",
+      "role": "admin"
+    },
+    {
+      "id": 2,
+      "name": "Laura",
+      "email": "laura@user.com",
+      "password": "user123",
+      "role": "user"
+    }
+  ],
+  "employees": [
+    {
+      "id": 1,
+      "name": "Carlos",
+      "lastname": "Ramírez",
+      "identification": "123456789",
+      "created": "2025-07-13T10:00:00.000Z"
+    }
+  ]
+}
