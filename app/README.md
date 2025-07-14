@@ -1,134 +1,152 @@
-¡Claro, Jaks! Aquí tienes un `README.md` completo, sencillo y presentable para tu repositorio `prueba-desempe-o-javascript`, ideal para tu entrega de prueba de desempeño:
+# Event Management (SPA)
+
+This project was developed as part of the performance test for Module 3 (JavaScript). It consists of a **Single Page Application (SPA)** that allows managing events and users, with basic authentication, protected routes, and role control.
 
 ---
 
-### 📄 `README.md`
+## 🚀 Features
 
-```markdown
-# 🧑‍💻 Prueba de Desempeño – Gestión de Empleados (SPA)
-
-Este proyecto fue desarrollado como parte de la prueba de desempeño del Módulo 3 (JavaScript). Consiste en una **Single Page Application (SPA)** que permite gestionar empleados, con autenticación básica, rutas protegidas y control de roles.
-
----
-
-## 🚀 Funcionalidades
-
-- ✅ Inicio de sesión con validación de usuario (usando json-server)
-- 🔒 Rutas protegidas según autenticación y rol (`admin` o `user`)
-- 👨‍💼 CRUD de empleados (crear, leer, editar, eliminar)
-- 🔍 Búsqueda dinámica de empleados
-- ✍️ Formulario compartido para crear y editar
-- 🧭 Navegación SPA sin recargar la página
-- 🎨 Estilos con TailwindCSS
-- ⚠️ Página 404 personalizada
+- Login with user validation (using json-server)
+- Protected routes based on authentication and role (`admin` or `user`)
+- CRUD for events (create, read, edit, delete)
+- CRUD for users (create, read, edit, delete)
+- Dynamic search for users and events
+- SPA navigation without reloading the page
+- Styles with TailwindCSS
+- Custom 404 page
 
 ---
 
 ## 👥 Roles
 
-| Rol    | Acceso                                        |
-|--------|-----------------------------------------------|
-| admin  | Acceso a todo: empleados, usuarios, inicio    |
-| user   | Acceso a inicio y empleados                   |
+| Role | Access |
+|--------|------------------------------------------------------------|
+| admin | Access to everything: events, users, home |
+| user | Login and Events |
 
 ---
 
-## 🗂️ Estructura del Proyecto
+## 🗂️ Project Structure
 
 ```
-
-src/
+app/
+├── database/
+│ └── db.json
+├──src/
 ├── controllers/
-│   ├── crudEmployees.js
-│   └── login.js
-├── views/
-│   ├── login.html
-│   ├── home.html
-│   ├── managmentEmployee.html
-│   ├── users.html
-│   └── 404.html
-├── router.js
-├── main.js
+│ ├── login.js
+| ├── crudEvents.js 
+│ └── login.js 
+├── views/ 
+│ ├── login.html 
+│ ├── register.html 
+│ ├── admin.html 
+│ ├── home.html 
+│ ├── managementEvents.html 
+│ ├── users.html 
+│ └── 404.html 
+├── router.js 
+├── main.js 
 ├── style.css
+├── index.html
 
 ````
 
 ---
 
-## 📦 Requisitos
+## 📦 Requirements
 
 - Node.js
 - json-server
 
 ---
 
-## ▶️ Instrucciones de uso
+## ▶️ Instructions for use
 
-1. Instalar dependencias (si las hay):
+1. Install dependencies (if any):
 
-   ```bash
-   npm install
+```bash
+npm install
 ````
 
-2. Iniciar json-server:
+2. Start json-server:
 
-   ```bash
-   npx json-server --watch db.json --port 3000
-   ```
+```bash
+npx json-server --watch db.json --port 3000
+```
 
-3. Correr el proyecto:
+3. Run the project:
 
-   ```bash
-   npm run dev
-   ```
+```bash
+npm run dev
+```
 
-> 💡 Si no usas Vite, puedes abrir `index.html` directamente en el navegador (aunque sin SPA completa).
+> 💡 If you're not using Vite, you can open `index.html` directly in the browser (although without the full SPA).
 
 ---
 
-## 📁 Base de datos (`db.json`)
+## 📁 Database (`db.json`)
 
 ```json
-{
+
   "users": [
     {
-      "id": 1,
-      "name": "Admin",
-      "email": "admin@mail.com",
-      "password": "123",
+      "id": "1",
+      "name": "Jason Acevedo",
+      "email": "jason@admin.com",
+      "password": "jason123",
       "role": "admin"
     },
     {
-      "id": 2,
-      "name": "User",
-      "email": "user@mail.com",
-      "password": "123",
+      "id": "2",
+      "name": "Laura Gonzalez",
+      "email": "laura@user.com",
+      "password": "laura123",
+      "role": "user"
+    },
+    {
+      "name": "Valentina Rubio",
+      "email": "valentina@user.com",
+      "role": "user",
+      "password": "valentina123",
+      "id": "22c7"
+    },
+    {
+      "id": "8a29",
+      "name": "Ellen Manjarres",
+      "email": "ellen@user.com",
+      "password": "ellen123",
+      "role": "user"
+    },
+    {
+      "id": "6439",
+      "name": "Daniel Chalarca",
+      "email": "daniel@admin.com",
+      "password": "daniel123",
       "role": "user"
     }
   ],
-  "employees": []
+  "events": [
+    {
+      "id": 1,
+      "title": "Hackatón 2025",
+      "description": "Evento de programación colaborativa",
+      "date": "2025-09-10",
+      "capacity": 30,
+      "registeredUsers": []
+    },
+    {
+      "id": "9125",
+      "title": "Comer",
+      "description": "ir a comer",
+      "date": "2025-07-14",
+      "capacity": 20,
+      "registeredUsers": [
+        "valentina@user.com"
+      ]
+    }
+  ]
 }
 ```
 
 ---
-
-## 👤 Autor
-
-**Jaks Acevedo**
-Estudiante | Prueba M3 – JavaScript
-GitHub: [@Jaks-Nova](https://github.com/Jaks-Nova)
-
----
-
-## 📝 Licencia
-
-Proyecto académico para uso educativo – no comercial.
-
-```
-
----
-
-Puedes guardar ese contenido como archivo `README.md` en la raíz de tu proyecto, subirlo con GitHub Desktop y hacer `push`.
-
-¿Quieres también el `.zip` para Classroom o lo dejamos así?
-```

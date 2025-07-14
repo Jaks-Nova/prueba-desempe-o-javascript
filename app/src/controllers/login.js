@@ -10,14 +10,14 @@ export async function login({ email, password }) {
     const users = Array.isArray(resp.data) ? resp.data : [];
 
     if (users.length === 0) {
-      alert("Usuario o contraseña inválido");
+      alert("Invalid username or password");
       return false;
     }
 
     const user = users[0];
 
     if (!user.role) {
-      alert("El usuario no tiene un rol asignado.");
+      alert("The user does not have a role assigned.");
       return false;
     }
 
@@ -26,8 +26,8 @@ export async function login({ email, password }) {
     return true;
 
   } catch (error) {
-    console.error("Error al hacer login:", error);
-    alert("Ocurrió un error inesperado");
+    console.error("Error logging in:", error);
+    alert("An unexpected error occurred");
     return false;
   }
 }

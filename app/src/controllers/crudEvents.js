@@ -1,13 +1,13 @@
 const BASE_URL = "http://localhost:3000/events";
 
-// Obtener todos los eventos
+// Get all events
 export async function getEvents() {
   const res = await fetch(BASE_URL);
   const data = await res.json();
   return data;
 }
 
-// Agregar nuevo evento
+// Add new event
 export async function addEvent(eventData) {
   await fetch(BASE_URL, {
     method: "POST",
@@ -16,7 +16,7 @@ export async function addEvent(eventData) {
   });
 }
 
-// Actualizar evento
+// Update event
 export async function updateEvent(eventData, id) {
   await fetch(`${BASE_URL}/${id}`, {
     method: "PUT",
@@ -25,14 +25,14 @@ export async function updateEvent(eventData, id) {
   });
 }
 
-// Eliminar evento
+// Delete event
 export async function deleteEvent(id) {
   await fetch(`${BASE_URL}/${id}`, {
     method: "DELETE"
   });
 }
 
-// Registrar usuario al evento
+// Register user for the event
 export async function registerToEvent(eventId, userEmail) {
   const res = await fetch(`${BASE_URL}/${eventId}`);
   const event = await res.json();

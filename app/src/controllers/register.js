@@ -3,15 +3,15 @@ const userURL = "http://localhost:3000/users";
 
 export async function register({ name, email, password, role }) {
   try {
-    // Verificar si el usuario ya existe
+// Check if the user already exists
     const existing = await axios.get(userURL, { params: { email } });
 
     if (existing.data.length > 0) {
-      alert("Este correo ya está registrado.");
+      alert("This email is already registered.");
       return false;
     }
 
-    // Crear usuario nuevo
+// Create new user
     await axios.post(userURL, {
       name,
       email,
@@ -19,11 +19,11 @@ export async function register({ name, email, password, role }) {
       role,
     });
 
-    alert("Registro exitoso. Ahora puedes iniciar sesión.");
+    alert("Registration successful. You can now log in.");
     return true;
   } catch (error) {
-    console.log("Error al registrar:", error);
-    alert("Error al registrar. Intenta de nuevo.");
+    console.log("Error registering:", error);
+    alert("Error registering. Please try again.");
     return false;
   }
 }

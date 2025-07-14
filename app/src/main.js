@@ -4,7 +4,7 @@ import "./style.css";
 window.addEventListener("DOMContentLoaded", () => {
   renderRoute();
 
-  // Escuchar clicks en los enlaces internos para SPA
+// Listen for clicks on internal links for SPA
   document.body.addEventListener("click", (e) => {
     const target = e.target.closest("a");
     if (target && target.getAttribute("href")?.startsWith("/")) {
@@ -15,5 +15,5 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Para que funcione también con botones del navegador
+// So that it also works with browser buttons
 window.addEventListener("popstate", renderRoute);

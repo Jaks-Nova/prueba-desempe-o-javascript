@@ -75,7 +75,7 @@ export async function renderRoute() {
       }
     }
 
-    // REGISTRO
+// REGISTER
     if (path === "/register") {
       document.getElementById("registerForm").addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -85,7 +85,7 @@ export async function renderRoute() {
         const password = document.getElementById("password").value;
 
         if (!name || !email || !password) {
-          alert("Todos los campos son obligatorios");
+          alert("Fill in the fields");
           return;
         }
 
@@ -93,7 +93,7 @@ export async function renderRoute() {
         const data = await res.json();
 
         if (data.length > 0) {
-          alert("Este correo ya está registrado.");
+          alert("This email is already registered.");
           return;
         }
 
@@ -104,7 +104,7 @@ export async function renderRoute() {
           body: JSON.stringify(newUser),
         });
 
-        alert("Registro exitoso. Ahora puedes iniciar sesión.");
+        alert("Registration successful. You can now log in.");
         location.pathname = "/login";
       });
     }
@@ -128,7 +128,7 @@ export async function renderRoute() {
       eventTableBody.innerHTML = "";
 
       if (events.length === 0) {
-        eventTableBody.innerHTML = "<tr><td colspan='5'>No hay eventos disponibles</td></tr>";
+        eventTableBody.innerHTML = "<tr><td colspan='5'>There are no events available</td></tr>";
       }
 
       events.forEach(event => {
@@ -140,7 +140,7 @@ export async function renderRoute() {
           <td class="py-2 px-4 border">${event.title}</td>
           <td class="py-2 px-4 border">${event.description}</td>
           <td class="py-2 px-4 border">${event.registeredUsers.length} / ${event.capacity}</td>
-          <td class="py-2 px-4 border">${isRegistered ? "Inscrito" : "Disponible"}</td>
+          <td class="py-2 px-4 border">${isRegistered ? "Registered" : "Available"}</td>
           <td class="py-2 px-4 border">
             ${
               user.role === "admin"
@@ -192,7 +192,7 @@ export async function renderRoute() {
         });
       });
 
-      // Mostrar formulario solo si es admin
+// Show form only if admin
       if (user.role === "admin") {
         eventForm.style.display = "grid";
         eventForm.addEventListener("submit", async (e) => {
@@ -202,8 +202,8 @@ export async function renderRoute() {
           const description = document.getElementById("event-description").value;
           const assignedEmail = document.getElementById("event-assigned").value;
 
-          if (!title || !description || !assignedEmail) {
-            alert("Todos los campos son obligatorios");
+          if (!title || !description ) {
+            alert("All fields are required");
             return;
           }
 
@@ -223,7 +223,7 @@ export async function renderRoute() {
       }
     }
 
-    // USUARIOS
+    // USERS
     if (path === "/users" && user?.role === "admin") {
       const tableBody = document.getElementById("user-table-body");
 
@@ -232,7 +232,7 @@ export async function renderRoute() {
         const users = await res.json();
 
         if (users.length === 0) {
-          tableBody.innerHTML = "<tr><td colspan='4'>No hay usuarios registrados</td></tr>";
+          tableBody.innerHTML = "<tr><td colspan='4'>There are no registered users</td></tr>";
         }
 
         users.forEach(u => {
@@ -242,8 +242,8 @@ export async function renderRoute() {
             <td class="py-2 px-4">${u.email}</td>
             <td class="py-2 px-4">${u.role}</td>
             <td class="py-2 px-4">
-              <button class="edit-user bg-blue-500 text-white px-2 py-1 rounded" data-id="${u.id}">Editar</button>
-              <button class="delete-user bg-red-500 text-white px-2 py-1 rounded ml-2" data-id="${u.id}">Eliminar</button>
+              <button class="edit-user bg-blue-500 text-white px-2 py-1 rounded" data-id="${u.id}">Update</button>
+              <button class="delete-user bg-red-500 text-white px-2 py-1 rounded ml-2" data-id="${u.id}">Delete</button>
             </td>
           `;
           tableBody.appendChild(row);
@@ -265,9 +265,9 @@ export async function renderRoute() {
             const res = await fetch(`http://localhost:3000/users/${id}`);
             const userEdit = await res.json();
 
-            const newName = prompt("Nuevo nombre:", userEdit.name);
-            const newEmail = prompt("Nuevo email:", userEdit.email);
-            const newRole = prompt("Nuevo rol (admin/user):", userEdit.role);
+            const newName = prompt("New name:", userEdit.name);
+            const newEmail = prompt("New email:", userEdit.email);
+            const newRole = prompt("New role (admin/user):", userEdit.role);
 
             if (newName && newEmail && newRole) {
               await fetch(`http://localhost:3000/users/${id}`, {
@@ -281,8 +281,8 @@ export async function renderRoute() {
         });
 
       } catch (err) {
-        console.error("Error al cargar usuarios", err);
-        tableBody.innerHTML = "<tr><td colspan='4'>Error al cargar usuarios</td></tr>";
+        console.error("Error loading users", err);
+        tableBody.innerHTML = "<tr><td colspan='4'>Error loading users</td></tr>";
       }
     }
 

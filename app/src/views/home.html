@@ -1,33 +1,33 @@
 <div class="p-6">
   <h2 class="text-2xl font-bold text-center mb-6">
-    Bienvenido <span id="username">Usuario</span>
+    Welcome <span id="username">User</span>
   </h2>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <!-- Opción: Ir a eventos -->
+<!-- Option: Go to events -->
     <a href="/events" class="block bg-blue-200 hover:bg-blue-300 text-center p-6 rounded-lg shadow transition">
-      <h3 class="text-lg font-semibold">Eventos</h3>
-      <p class="text-sm">Consulta y participa en eventos disponibles</p>
+      <h3 class="text-lg font-semibold">Events</h3>
+      <p class="text-sm">Consult and participate in available events</p>
     </a>
 
-    <!-- Solo visible para admin -->
+<!-- Visible only to admin -->
     <div id="admin-options" class="hidden">
       <a href="/users" class="block bg-green-200 hover:bg-green-300 text-center p-6 rounded-lg shadow transition">
-        <h3 class="text-lg font-semibold">Gestión de Usuarios</h3>
-        <p class="text-sm">Accede al panel de usuarios</p>
+        <h3 class="text-lg font-semibold">User Management</h3>
+        <p class="text-sm">Access the user panel</p>
       </a>
     </div>
   </div>
 </div>
 
 <script>
-  // Mostrar nombre
+// Display name
   const user = JSON.parse(localStorage.getItem("user"));
   if (user) {
     document.getElementById("username").textContent = user.name;
   }
 
-  // Mostrar botón de admin si el rol es "admin"
+// Show admin button if the role is "admin"
   if (user?.role === "admin") {
     document.getElementById("admin-options").classList.remove("hidden");
   }
