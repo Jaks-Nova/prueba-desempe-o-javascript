@@ -36,7 +36,7 @@ export async function renderRoute() {
 
   if (isAuth && user?.role !== "admin") {
     if (["/admin", "/users"].includes(path)) {
-      alert("No tienes permiso para acceder a esta ruta");
+      alert("You do not have permission to access this route");
       location.pathname = "/";
       return;
     }
@@ -69,7 +69,7 @@ export async function renderRoute() {
           if (success) {
             location.pathname = "/";
           } else {
-            alert("Correo o contraseña incorrectos");
+            alert("Incorrect email or password");
           }
         });
       }
@@ -145,11 +145,11 @@ export async function renderRoute() {
             ${
               user.role === "admin"
                 ? `
-                  <button class="edit-event bg-blue-500 text-white px-2 py-1 rounded" data-id="${event.id}">Editar</button>
-                  <button class="delete-event bg-red-500 text-white px-2 py-1 rounded ml-2" data-id="${event.id}">Eliminar</button>
+                  <button class="edit-event bg-blue-500 text-white px-2 py-1 rounded" data-id="${event.id}">Update</button>
+                  <button class="delete-event bg-red-500 text-white px-2 py-1 rounded ml-2" data-id="${event.id}">Delete</button>
                 `
                 : !isRegistered && event.registeredUsers.length < event.capacity
-                  ? `<button class="register-event bg-green-500 text-white px-2 py-1 rounded" data-id="${event.id}">Unirme</button>`
+                  ? `<button class="register-event bg-green-500 text-white px-2 py-1 rounded" data-id="${event.id}">Join</button>`
                   : ""
             }
           </td>
@@ -157,7 +157,7 @@ export async function renderRoute() {
         eventTableBody.appendChild(row);
       });
 
-      // Acciones de eventos
+// Event actions
       document.querySelectorAll(".register-event").forEach(btn => {
         btn.addEventListener("click", async () => {
           const id = btn.dataset.id;
@@ -169,7 +169,7 @@ export async function renderRoute() {
       document.querySelectorAll(".delete-event").forEach(btn => {
         btn.addEventListener("click", async () => {
           const id = btn.dataset.id;
-          if (confirm("¿Deseas eliminar este evento?")) {
+          if (confirm("Do you want to delete this event?")) {
             await deleteEvent(id);
             location.reload();
           }
@@ -181,9 +181,9 @@ export async function renderRoute() {
           const id = btn.dataset.id;
           const event = events.find(ev => ev.id == id);
 
-          const newTitle = prompt("Nuevo título:", event.title);
-          const newDesc = prompt("Nueva descripción:", event.description);
-          const newCap = prompt("Nueva capacidad:", event.capacity);
+          const newTitle = prompt("New title:", event.title);
+          const newDesc = prompt("New description:", event.description);
+          const newCap = prompt("New capability:", event.capacity);
 
           if (newTitle && newDesc && newCap) {
             await updateEvent({ ...event, title: newTitle, description: newDesc, capacity: Number(newCap) }, id);
