@@ -12,7 +12,6 @@ const routes = {
   "/login": "/src/views/login.html",
   "/register": "/src/views/register.html",
   "/admin": "/src/views/admin.html",
-  "/user": "/src/views/user.html",
   "/tasks": "/src/views/managmentTask.html",
   "/users": "/src/views/users.html",
   "/404": "/src/views/404.html",
@@ -62,9 +61,8 @@ export async function renderRoute() {
 
         const success = await login({ email, password });
         if (success) {
-          const user = JSON.parse(localStorage.getItem("user"));
-          location.pathname = user.role === "admin" ? "/admin" : "/user";
-        }
+  location.pathname = "/";
+}
       });
     }
 
@@ -230,6 +228,68 @@ if (path === "/tasks") {
   }
 }
 
+// USUARIOS (solo admin)
+if (path === "/users" && user?.role === "admin") {
+  const tableBody = document.getElementById("user-table-body");
+
+  try {
+    const res = await fetch("http://localhost:3000/users");
+    const users = await res.json();
+
+    if (users.length === 0) {
+      tableBody.innerHTML = "<tr><td colspan='4'>No hay usuarios registrados</td></tr>";
+    }
+
+    users.forEach(u => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td class="py-2 px-4">${u.name}</td>
+        <td class="py-2 px-4">${u.email}</td>
+        <td class="py-2 px-4">${u.role}</td>
+        <td class="py-2 px-4">
+          <button class="edit-user bg-blue-500 text-white px-2 py-1 rounded" data-id="${u.id}">Editar</button>
+          <button class="delete-user bg-red-500 text-white px-2 py-1 rounded ml-2" data-id="${u.id}">Eliminar</button>
+        </td>
+      `;
+      tableBody.appendChild(row);
+    });
+
+    document.querySelectorAll(".delete-user").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const id = btn.dataset.id;
+        if (confirm("¿Eliminar este usuario?")) {
+          await fetch(`http://localhost:3000/users/${id}`, { method: "DELETE" });
+          location.reload();
+        }
+      });
+    });
+
+    document.querySelectorAll(".edit-user").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const id = btn.dataset.id;
+        const res = await fetch(`http://localhost:3000/users/${id}`);
+        const userEdit = await res.json();
+
+        const newName = prompt("Nuevo nombre:", userEdit.name);
+        const newEmail = prompt("Nuevo email:", userEdit.email);
+        const newRole = prompt("Nuevo rol (admin/user):", userEdit.role);
+
+        if (newName && newEmail && newRole) {
+          await fetch(`http://localhost:3000/users/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...userEdit, name: newName, email: newEmail, role: newRole }),
+          });
+          location.reload();
+        }
+      });
+    });
+
+  } catch (err) {
+    console.error("Error al cargar usuarios", err);
+    tableBody.innerHTML = "<tr><td colspan='4'>Error al cargar usuarios</td></tr>";
+  }
+}
 
     // LOGOUT
     if (document.getElementById("logOut")) {

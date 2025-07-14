@@ -5,18 +5,17 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   </head>
   <body>
-    <header id="principal-header" hidden>
-      <nav>
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/employee">Employee</a></li>
-          <li><a href="/users">Users</a></li>
-        </ul>
-      </nav>
-      <button id="logOut" class="bg-cyan-100 rounded-lg px-2 cursor-pointer"> Logout</button>
-    </header>
+      <header id="principal-header" class="p-4 bg-gray-200">
+    <nav class="flex space-x-4">
+      <a href="/">Home</a>
+      <a href="/tasks">Tareas</a>
+      <a href="/users">Users</a>
+      <button id="logOut" class="ml-auto bg-red-500 text-white px-2 py-1 rounded">Logout</button>
+    </nav>
+  </header>
     <div id="app" class="bg-gray-100"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
