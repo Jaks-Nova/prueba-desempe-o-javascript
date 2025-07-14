@@ -1,10 +1,10 @@
 import {
-  getTasks,
-  addTask,
-  deleteTask,
-  updateTask,
-  markTaskCompleted
-} from "./controllers/crudTasks.js";
+  getEvents,
+  addEvent,
+  updateEvent,
+  deleteEvent,
+  registerToEvent
+} from "./controllers/crudEvents.js";
 import { login } from "./controllers/login.js";
 
 const routes = {
