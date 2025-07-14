@@ -1,27 +1,43 @@
 {
   "users": [
     {
-      "id": 1,
-      "name": "Jason",
+      "id": "1",
+      "name": "Jason Acevedo",
       "email": "jason@admin.com",
-      "password": "admin123",
+      "password": "jason123",
       "role": "admin"
     },
     {
-      "id": 2,
-      "name": "Laura",
+      "id": "2",
+      "name": "Laura Gonzalez",
       "email": "laura@user.com",
-      "password": "user123",
+      "password": "laura123",
+      "role": "user"
+    },
+    {
+      "name": "Valentina Rubio",
+      "email": "valentina@user.com",
+      "role": "user",
+      "password": "valentina123",
+      "id": "22c7"
+    },
+    {
+      "id": "8a29",
+      "name": "Ellen Manjarres",
+      "email": "ellen@user.com",
+      "password": "ellen123",
       "role": "user"
     }
   ],
-  "employees": [
+ 
+  "tasks": [
     {
       "id": 1,
-      "name": "Carlos",
-      "lastname": "Ramírez",
-      "identification": "123456789",
-      "created": "2025-07-13T10:00:00.000Z"
+      "title": "Revisar informe",
+      "description": "Analizar el informe semanal del proyecto",
+      "assignedTo": "laura@user.com",
+      "status": "pendiente",
+      "created": "2025-07-10T10:00:00Z"
     }
   ]
 }
