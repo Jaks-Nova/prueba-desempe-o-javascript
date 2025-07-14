@@ -1,0 +1,33 @@
+<div class="p-6">
+  <h2 class="text-2xl font-bold mb-4 text-center">Gestión de Eventos</h2>
+
+  <!-- Formulario solo visible para admin -->
+  <form id="taskForm" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <input type="text" id="event-title" placeholder="Título del Evento" class="border px-3 py-2 rounded" />
+    <input type="text" id="event-description" placeholder="Descripción del Evento" class="border px-3 py-2 rounded" />
+    <input type="email" id="event-assigned" placeholder="Correo del primer inscrito (opcional)" class="border px-3 py-2 rounded" />
+    <div class="md:col-span-3">
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        Crear Evento
+      </button>
+    </div>
+  </form>
+
+  <!-- Tabla de eventos -->
+  <div class="overflow-x-auto">
+    <table class="w-full border border-gray-300">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="py-2 px-4 border">Título</th>
+          <th class="py-2 px-4 border">Descripción</th>
+          <th class="py-2 px-4 border">Cupos</th>
+          <th class="py-2 px-4 border">Estado</th>
+          <th class="py-2 px-4 border">Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="task-table-body" class="text-center">
+        <!-- Eventos se llenan desde JS -->
+      </tbody>
+    </table>
+  </div>
+</div>

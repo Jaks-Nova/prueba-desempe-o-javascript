@@ -27,18 +27,33 @@
       "email": "ellen@user.com",
       "password": "ellen123",
       "role": "user"
+    },
+    {
+      "id": "6439",
+      "name": "Daniel Chalarca",
+      "email": "daniel@admin.com",
+      "password": "daniel123",
+      "role": "user"
     }
   ],
- 
-"events": [
-  {
-    "id": 1,
-    "title": "Hackatón 2025",
-    "description": "Evento de programación colaborativa",
-    "date": "2025-09-10",
-    "capacity": 30,
-    "registeredUsers": []
-  }
-]
-
+  "events": [
+    {
+      "id": 1,
+      "title": "Hackatón 2025",
+      "description": "Evento de programación colaborativa",
+      "date": "2025-09-10",
+      "capacity": 30,
+      "registeredUsers": []
+    },
+    {
+      "id": "7b9c",
+      "title": "Comer",
+      "description": "ir a comer",
+      "date": "2025-07-14",
+      "capacity": 20,
+      "registeredUsers": [
+        "valentina@user.com"
+      ]
+    }
+  ]
 }

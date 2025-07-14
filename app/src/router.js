@@ -12,7 +12,7 @@ const routes = {
   "/login": "/src/views/login.html",
   "/register": "/src/views/register.html",
   "/admin": "/src/views/admin.html",
-  "/tasks": "/src/views/managmentTask.html",
+  "/events": "/src/views/managmentEvents.html",
   "/users": "/src/views/users.html",
   "/404": "/src/views/404.html",
 };
@@ -54,16 +54,25 @@ export async function renderRoute() {
     // LOGIN
     if (path === "/login") {
       document.getElementById("principal-header").hidden = true;
-      document.getElementById("loginForm").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
 
-        const success = await login({ email, password });
-        if (success) {
-  location.pathname = "/";
-}
-      });
+      const loginForm = document.getElementById("loginForm");
+
+      if (loginForm) {
+        loginForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+
+          const success = await login({ email, password });
+
+          if (success) {
+            location.pathname = "/";
+          } else {
+            alert("Correo o contraseña incorrectos");
+          }
+        });
+      }
     }
 
     // REGISTRO
@@ -102,194 +111,180 @@ export async function renderRoute() {
 
     // HOME
     if (path === "/") {
-      app.innerHTML = `
-      <div class="text-center mb-4">
-        <h2 class="text-2xl font-bold">Bienvenido ${user?.name}</h2>
-      </div>
-      <div class="container grid grid-cols-2 space-x-4 p-3">
-        <a href="/tasks"><div class="card bg-blue-200 h-24 w-full rounded-lg p-3">Tareas</div></a>
-        ${user?.role === "admin"
-          ? `<a href="/users"><div class="card bg-blue-200 h-24 w-full rounded-lg p-3">Usuarios</div></a>`
-          : ""}
-      </div>`;
+      const username = document.getElementById("username");
+      const adminOptions = document.getElementById("admin-options");
+
+      if (username) username.textContent = user?.name;
+      if (adminOptions && user?.role === "admin") adminOptions.classList.remove("hidden");
     }
 
-    // TASKS
-if (path === "/tasks") {
-  const taskTable = document.getElementById("task-table-body");
-  const taskForm = document.getElementById("taskForm");
+    // EVENTS
+    if (path === "/events") {
+      const eventForm = document.getElementById("taskForm");
+      const eventTableBody = document.getElementById("task-table-body");
 
-  const allTasks = await getTasks(user);
-  const visibleTasks = user.role === "admin"
-    ? allTasks
-    : allTasks.filter(task => task.assignedTo === user.email);
+      const events = await getEvents();
 
-  taskTable.innerHTML = "";
+      eventTableBody.innerHTML = "";
 
-  if (visibleTasks.length === 0) {
-    taskTable.innerHTML = "<tr><td colspan='5'>No hay tareas para mostrar</td></tr>";
-  }
-
-  visibleTasks.forEach(task => {
-    const row = document.createElement("tr");
-    row.className = "border-b";
-    row.innerHTML = `
-      <td class="py-2 px-4">${task.title}</td>
-      <td class="py-2 px-4">${task.description}</td>
-      <td class="py-2 px-4">${task.assignedTo}</td>
-      <td class="py-2 px-4">${task.status}</td>
-      <td class="py-2 px-4">
-        ${
-          user.role === "admin"
-            ? `
-              <button class="edit-task bg-blue-500 text-white px-2 py-1 rounded" data-id="${task.id}">Editar</button>
-              <button class="delete-task bg-red-500 text-white px-2 py-1 rounded ml-2" data-id="${task.id}">Eliminar</button>
-            `
-            : task.status === "pendiente"
-              ? `<button class="mark-done bg-green-500 text-white px-2 py-1 rounded" data-id="${task.id}">Marcar como completada</button>`
-              : ""
-        }
-      </td>
-    `;
-    taskTable.appendChild(row);
-  });
-
-  // Usuario: Marcar como completada
-  document.querySelectorAll(".mark-done").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const id = btn.dataset.id;
-      const task = allTasks.find(t => t.id == id);
-      await markTaskCompleted(task);
-      location.reload();
-    });
-  });
-
-  // Admin: Eliminar tarea
-  document.querySelectorAll(".delete-task").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const id = btn.dataset.id;
-      if (confirm("¿Deseas eliminar esta tarea?")) {
-        await deleteTask(id);
-        location.reload();
+      if (events.length === 0) {
+        eventTableBody.innerHTML = "<tr><td colspan='5'>No hay eventos disponibles</td></tr>";
       }
-    });
-  });
 
-  // Admin: Editar tarea
-  document.querySelectorAll(".edit-task").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const id = btn.dataset.id;
-      const task = allTasks.find(t => t.id == id);
+      events.forEach(event => {
+        const isRegistered = event.registeredUsers.includes(user.email);
 
-      const newTitle = prompt("Nuevo título:", task.title);
-      const newDesc = prompt("Nueva descripción:", task.description);
-      const newStatus = prompt("Nuevo estado (pendiente/completada):", task.status);
-
-      if (newTitle && newDesc && newStatus) {
-        await updateTask(
-          { ...task, title: newTitle, description: newDesc, status: newStatus },
-          task.id
-        );
-        location.reload();
-      }
-    });
-  });
-
-  // Mostrar formulario solo si el usuario es admin
-  if (taskForm) {
-    if (user.role === "admin") {
-      taskForm.style.display = "grid"; // o "block" según tu diseño
-      taskForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const title = document.getElementById("task-title").value;
-        const description = document.getElementById("task-description").value;
-        const assignedTo = document.getElementById("task-assigned").value;
-
-        if (!title || !description || !assignedTo) {
-          alert("Todos los campos son obligatorios");
-          return;
-        }
-
-        const newTask = {
-          title,
-          description,
-          assignedTo,
-          status: "pendiente",
-          created: new Date().toISOString(),
-        };
-
-        await addTask(newTask);
-        location.reload();
+        const row = document.createElement("tr");
+        row.className = "border-b";
+        row.innerHTML = `
+          <td class="py-2 px-4 border">${event.title}</td>
+          <td class="py-2 px-4 border">${event.description}</td>
+          <td class="py-2 px-4 border">${event.registeredUsers.length} / ${event.capacity}</td>
+          <td class="py-2 px-4 border">${isRegistered ? "Inscrito" : "Disponible"}</td>
+          <td class="py-2 px-4 border">
+            ${
+              user.role === "admin"
+                ? `
+                  <button class="edit-event bg-blue-500 text-white px-2 py-1 rounded" data-id="${event.id}">Editar</button>
+                  <button class="delete-event bg-red-500 text-white px-2 py-1 rounded ml-2" data-id="${event.id}">Eliminar</button>
+                `
+                : !isRegistered && event.registeredUsers.length < event.capacity
+                  ? `<button class="register-event bg-green-500 text-white px-2 py-1 rounded" data-id="${event.id}">Unirme</button>`
+                  : ""
+            }
+          </td>
+        `;
+        eventTableBody.appendChild(row);
       });
-    } else {
-      taskForm.style.display = "none";
-    }
-  }
-}
 
-// USUARIOS (solo admin)
-if (path === "/users" && user?.role === "admin") {
-  const tableBody = document.getElementById("user-table-body");
-
-  try {
-    const res = await fetch("http://localhost:3000/users");
-    const users = await res.json();
-
-    if (users.length === 0) {
-      tableBody.innerHTML = "<tr><td colspan='4'>No hay usuarios registrados</td></tr>";
-    }
-
-    users.forEach(u => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td class="py-2 px-4">${u.name}</td>
-        <td class="py-2 px-4">${u.email}</td>
-        <td class="py-2 px-4">${u.role}</td>
-        <td class="py-2 px-4">
-          <button class="edit-user bg-blue-500 text-white px-2 py-1 rounded" data-id="${u.id}">Editar</button>
-          <button class="delete-user bg-red-500 text-white px-2 py-1 rounded ml-2" data-id="${u.id}">Eliminar</button>
-        </td>
-      `;
-      tableBody.appendChild(row);
-    });
-
-    document.querySelectorAll(".delete-user").forEach(btn => {
-      btn.addEventListener("click", async () => {
-        const id = btn.dataset.id;
-        if (confirm("¿Eliminar este usuario?")) {
-          await fetch(`http://localhost:3000/users/${id}`, { method: "DELETE" });
+      // Acciones de eventos
+      document.querySelectorAll(".register-event").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const id = btn.dataset.id;
+          await registerToEvent(id, user.email);
           location.reload();
-        }
+        });
       });
-    });
 
-    document.querySelectorAll(".edit-user").forEach(btn => {
-      btn.addEventListener("click", async () => {
-        const id = btn.dataset.id;
-        const res = await fetch(`http://localhost:3000/users/${id}`);
-        const userEdit = await res.json();
+      document.querySelectorAll(".delete-event").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const id = btn.dataset.id;
+          if (confirm("¿Deseas eliminar este evento?")) {
+            await deleteEvent(id);
+            location.reload();
+          }
+        });
+      });
 
-        const newName = prompt("Nuevo nombre:", userEdit.name);
-        const newEmail = prompt("Nuevo email:", userEdit.email);
-        const newRole = prompt("Nuevo rol (admin/user):", userEdit.role);
+      document.querySelectorAll(".edit-event").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const id = btn.dataset.id;
+          const event = events.find(ev => ev.id == id);
 
-        if (newName && newEmail && newRole) {
-          await fetch(`http://localhost:3000/users/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...userEdit, name: newName, email: newEmail, role: newRole }),
+          const newTitle = prompt("Nuevo título:", event.title);
+          const newDesc = prompt("Nueva descripción:", event.description);
+          const newCap = prompt("Nueva capacidad:", event.capacity);
+
+          if (newTitle && newDesc && newCap) {
+            await updateEvent({ ...event, title: newTitle, description: newDesc, capacity: Number(newCap) }, id);
+            location.reload();
+          }
+        });
+      });
+
+      // Mostrar formulario solo si es admin
+      if (user.role === "admin") {
+        eventForm.style.display = "grid";
+        eventForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const title = document.getElementById("event-title").value;
+          const description = document.getElementById("event-description").value;
+          const assignedEmail = document.getElementById("event-assigned").value;
+
+          if (!title || !description || !assignedEmail) {
+            alert("Todos los campos son obligatorios");
+            return;
+          }
+
+          const newEvent = {
+            title,
+            description,
+            date: new Date().toISOString().slice(0, 10),
+            capacity: 20,
+            registeredUsers: [assignedEmail]
+          };
+
+          await addEvent(newEvent);
+          location.reload();
+        });
+      } else {
+        eventForm.style.display = "none";
+      }
+    }
+
+    // USUARIOS
+    if (path === "/users" && user?.role === "admin") {
+      const tableBody = document.getElementById("user-table-body");
+
+      try {
+        const res = await fetch("http://localhost:3000/users");
+        const users = await res.json();
+
+        if (users.length === 0) {
+          tableBody.innerHTML = "<tr><td colspan='4'>No hay usuarios registrados</td></tr>";
+        }
+
+        users.forEach(u => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td class="py-2 px-4">${u.name}</td>
+            <td class="py-2 px-4">${u.email}</td>
+            <td class="py-2 px-4">${u.role}</td>
+            <td class="py-2 px-4">
+              <button class="edit-user bg-blue-500 text-white px-2 py-1 rounded" data-id="${u.id}">Editar</button>
+              <button class="delete-user bg-red-500 text-white px-2 py-1 rounded ml-2" data-id="${u.id}">Eliminar</button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+
+        document.querySelectorAll(".delete-user").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            const id = btn.dataset.id;
+            if (confirm("¿Eliminar este usuario?")) {
+              await fetch(`http://localhost:3000/users/${id}`, { method: "DELETE" });
+              location.reload();
+            }
           });
-          location.reload();
-        }
-      });
-    });
+        });
 
-  } catch (err) {
-    console.error("Error al cargar usuarios", err);
-    tableBody.innerHTML = "<tr><td colspan='4'>Error al cargar usuarios</td></tr>";
-  }
-}
+        document.querySelectorAll(".edit-user").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            const id = btn.dataset.id;
+            const res = await fetch(`http://localhost:3000/users/${id}`);
+            const userEdit = await res.json();
+
+            const newName = prompt("Nuevo nombre:", userEdit.name);
+            const newEmail = prompt("Nuevo email:", userEdit.email);
+            const newRole = prompt("Nuevo rol (admin/user):", userEdit.role);
+
+            if (newName && newEmail && newRole) {
+              await fetch(`http://localhost:3000/users/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ...userEdit, name: newName, email: newEmail, role: newRole }),
+              });
+              location.reload();
+            }
+          });
+        });
+
+      } catch (err) {
+        console.error("Error al cargar usuarios", err);
+        tableBody.innerHTML = "<tr><td colspan='4'>Error al cargar usuarios</td></tr>";
+      }
+    }
 
     // LOGOUT
     if (document.getElementById("logOut")) {

@@ -1,11 +1,34 @@
-<div class="container mx-auto text-center mt-10">
-  <h2 class="text-2xl font-bold mb-6">Bienvenido al Gestor de Tareas</h2>
-  <div id="home-content" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <!-- Este contenido se reemplaza dinámicamente desde router.js -->
-  </div>
-  <div class="mt-6">
-    <button id="logOut" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-      Cerrar sesión
-    </button>
+<div class="p-6">
+  <h2 class="text-2xl font-bold text-center mb-6">
+    Bienvenido <span id="username">Usuario</span>
+  </h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Opción: Ir a eventos -->
+    <a href="/events" class="block bg-blue-200 hover:bg-blue-300 text-center p-6 rounded-lg shadow transition">
+      <h3 class="text-lg font-semibold">Eventos</h3>
+      <p class="text-sm">Consulta y participa en eventos disponibles</p>
+    </a>
+
+    <!-- Solo visible para admin -->
+    <div id="admin-options" class="hidden">
+      <a href="/users" class="block bg-green-200 hover:bg-green-300 text-center p-6 rounded-lg shadow transition">
+        <h3 class="text-lg font-semibold">Gestión de Usuarios</h3>
+        <p class="text-sm">Accede al panel de usuarios</p>
+      </a>
+    </div>
   </div>
 </div>
+
+<script>
+  // Mostrar nombre
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user) {
+    document.getElementById("username").textContent = user.name;
+  }
+
+  // Mostrar botón de admin si el rol es "admin"
+  if (user?.role === "admin") {
+    document.getElementById("admin-options").classList.remove("hidden");
+  }
+</script>
